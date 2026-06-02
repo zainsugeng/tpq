@@ -36,10 +36,10 @@
 
     {{-- Flashcard --}}
     <main class="flex-1 flex flex-col justify-center">
-        <div id="kartu" class="pop bg-white rounded-[34px] shadow-xl shadow-emerald-100/50 border border-amber-100 px-8 py-10 text-center">
-            <div id="dots" class="flex justify-center gap-2 mb-7"></div>
-            <div id="isi" class="mb-2"></div>
-            <p id="label" class="font-fredoka text-xl font-semibold text-stone-400 mb-9"></p>
+        <div id="kartu" class="pop bg-white rounded-[34px] shadow-xl shadow-emerald-100/50 border border-amber-100 px-8 py-9 text-center">
+            <div id="dots" class="flex justify-center gap-2 mb-6"></div>
+            <div id="isi" class="h-52 flex items-center justify-center overflow-hidden"></div>
+            <p id="label" class="font-fredoka text-xl font-semibold text-stone-400 mt-4 mb-8"></p>
             <button id="btnDengar" class="press inline-flex items-center gap-3 bg-emerald-500 text-white rounded-full pl-6 pr-8 py-4 shadow-lg shadow-emerald-200">
                 <svg viewBox="0 0 24 24" class="w-6 h-6" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-1 7-4.5 7-8.8s-3-7.8-7-8.8z"/></svg>
                 <span class="font-fredoka font-bold text-lg">Dengar</span>
@@ -82,9 +82,9 @@
         const k = kartu[i];
 
         if (k.tipe === 'gambar' && k.gambar) {
-            elIsi.innerHTML = '<img src="' + k.gambar + '" class="mx-auto max-h-44 object-contain">';
+            elIsi.innerHTML = '<img src="' + k.gambar + '" class="max-h-full max-w-full object-contain">';
         } else {
-            elIsi.innerHTML = '<p class="arab text-emerald-900 leading-none" style="font-size:130px">' + (k.teks ?? '') + '</p>';
+            elIsi.innerHTML = '<p class="arab text-emerald-900 leading-none" style="font-size:120px">' + (k.teks ?? '') + '</p>';
         }
 
         elLabel.textContent = k.label ?? '';

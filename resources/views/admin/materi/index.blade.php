@@ -9,7 +9,7 @@
         <h1 class="font-fredoka text-2xl font-bold">Materi</h1>
         <p class="text-sm text-stone-500 font-semibold">Kelola huruf/kosakata tiap modul</p>
     </div>
-    <button onclick="bukaModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-semibold rounded-xl px-5 py-2.5 shadow flex items-center gap-2">
+    <button onclick="bukaModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-semibold rounded-xl px-5 py-2.5 shadow flex items-center gap-2 shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
         Tambah Materi
     </button>
@@ -19,58 +19,105 @@
     <div class="mb-4 rounded-xl bg-emerald-50 text-emerald-700 px-4 py-3 text-sm font-semibold">{{ session('sukses') }}</div>
 @endif
 
+{{-- Cari & filter --}}
+<form method="GET" class="flex flex-col sm:flex-row gap-3 mb-4">
+    <div class="relative flex-1">
+        <svg class="w-5 h-5 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.3-5.4a6.7 6.7 0 11-13.4 0 6.7 6.7 0 0113.4 0z"/></svg>
+        <input type="text" name="cari" value="{{ request('cari') }}" placeholder="Cari label atau huruf..."
+            class="w-full rounded-xl border border-stone-200 pl-11 pr-4 py-2.5 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none">
+    </div>
+    <select name="modul" class="rounded-xl border border-stone-200 px-4 py-2.5 bg-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none">
+        <option value="" @selected(!request('modul'))>Semua modul</option>
+        @foreach ($modul as $md)
+            <option value="{{ $md->id }}" @selected(request('modul') == $md->id)>{{ $md->nama }}</option>
+        @endforeach
+    </select>
+    <button type="submit" class="rounded-xl bg-stone-800 hover:bg-stone-900 text-white font-semibold px-5 py-2.5">Cari</button>
+    @if (request('cari') || request('modul'))
+        <a href="{{ route('admin.materi.index') }}" class="rounded-xl border border-stone-200 text-stone-600 font-semibold px-5 py-2.5 hover:bg-stone-50 text-center">Reset</a>
+    @endif
+</form>
+
 <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-    <table class="w-full text-sm">
-        <thead class="bg-stone-50 text-stone-500 text-left">
-            <tr>
-                <th class="px-5 py-3 font-semibold">Modul</th>
-                <th class="px-5 py-3 font-semibold w-24">Konten</th>
-                <th class="px-5 py-3 font-semibold">Label</th>
-                <th class="px-5 py-3 font-semibold w-20">Audio</th>
-                <th class="px-5 py-3 font-semibold w-16">Urut</th>
-                <th class="px-5 py-3 font-semibold w-32 text-right">Aksi</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-stone-100">
-            @forelse ($materi as $mt)
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[720px]">
+            <thead class="bg-stone-50 text-stone-500 text-left">
                 <tr>
-                    <td class="px-5 py-3 text-stone-500">{{ $mt->modul->nama ?? '-' }}</td>
-                    <td class="px-5 py-3">
-                        @if ($mt->tipe_konten === 'gambar' && $mt->gambar)
-                            <img src="{{ asset('storage/'.$mt->gambar) }}" class="w-10 h-10 object-cover rounded-lg">
-                        @else
-                            <span class="font-arabic text-2xl text-emerald-900">{{ $mt->teks_arab }}</span>
-                        @endif
-                    </td>
-                    <td class="px-5 py-3 font-bold text-stone-700">{{ $mt->label }}</td>
-                    <td class="px-5 py-3">
-                        @if ($mt->audio)
-                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Ada</span>
-                        @else
-                            <span class="text-xs font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full">Kosong</span>
-                        @endif
-                    </td>
-                    <td class="px-5 py-3 text-stone-400 font-bold">{{ $mt->urutan }}</td>
-                    <td class="px-5 py-3">
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="editMateri(this)"
-                                data-id="{{ $mt->id }}" data-modul="{{ $mt->modul_id }}" data-tipe="{{ $mt->tipe_konten }}"
-                                data-teks="{{ $mt->teks_arab }}" data-label="{{ $mt->label }}" data-urutan="{{ $mt->urutan }}"
-                                data-audio="{{ $mt->audio ? 'ada' : '' }}" data-gambar="{{ $mt->gambar ? 'ada' : '' }}"
-                                class="text-xs font-bold text-sky-600 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg">Edit</button>
-                            <form method="POST" action="{{ route('admin.materi.destroy', $mt->id) }}" onsubmit="return confirm('Hapus materi ini?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg">Hapus</button>
-                            </form>
-                        </div>
-                    </td>
+                    <th class="px-5 py-3 font-semibold">Modul</th>
+                    <th class="px-5 py-3 font-semibold w-24">Konten</th>
+                    <th class="px-5 py-3 font-semibold">Label</th>
+                    <th class="px-5 py-3 font-semibold w-20">Audio</th>
+                    <th class="px-5 py-3 font-semibold w-16">Urut</th>
+                    <th class="px-5 py-3 font-semibold w-32 text-right">Aksi</th>
                 </tr>
-            @empty
-                <tr><td colspan="6" class="px-5 py-8 text-center text-stone-400">Belum ada materi.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+                @forelse ($materi as $mt)
+                    <tr>
+                        <td class="px-5 py-3 text-stone-500">{{ $mt->modul->nama ?? '-' }}</td>
+                        <td class="px-5 py-3">
+                            @if ($mt->tipe_konten === 'gambar' && $mt->gambar)
+                                <img src="{{ asset('storage/'.$mt->gambar) }}" class="w-10 h-10 object-cover rounded-lg">
+                            @else
+                                <span class="font-arabic text-2xl text-emerald-900">{{ $mt->teks_arab }}</span>
+                            @endif
+                        </td>
+                        <td class="px-5 py-3 font-bold text-stone-700">{{ $mt->label }}</td>
+                        <td class="px-5 py-3">
+                            @if ($mt->audio)
+                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Ada</span>
+                            @else
+                                <span class="text-xs font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full">Kosong</span>
+                            @endif
+                        </td>
+                        <td class="px-5 py-3 text-stone-400 font-bold">{{ $mt->urutan }}</td>
+                        <td class="px-5 py-3">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="editMateri(this)"
+                                    data-id="{{ $mt->id }}" data-modul="{{ $mt->modul_id }}" data-tipe="{{ $mt->tipe_konten }}"
+                                    data-teks="{{ $mt->teks_arab }}" data-label="{{ $mt->label }}" data-urutan="{{ $mt->urutan }}"
+                                    data-audio="{{ $mt->audio ? 'ada' : '' }}" data-gambar="{{ $mt->gambar ? 'ada' : '' }}"
+                                    class="text-xs font-bold text-sky-600 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg">Edit</button>
+                                <form method="POST" action="{{ route('admin.materi.destroy', $mt->id) }}" onsubmit="return confirm('Hapus materi ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="6" class="px-5 py-8 text-center text-stone-400">
+                        {{ (request('cari') || request('modul')) ? 'Tidak ada materi yang cocok.' : 'Belum ada materi.' }}
+                    </td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
+
+{{-- Pagination --}}
+@if ($materi->hasPages())
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
+        <p class="text-sm text-stone-500 font-semibold">
+            Menampilkan {{ $materi->firstItem() }}–{{ $materi->lastItem() }} dari {{ $materi->total() }}
+        </p>
+        <div class="flex items-center gap-2">
+            @if ($materi->onFirstPage())
+                <span class="px-4 py-2 rounded-xl text-stone-300 font-semibold bg-stone-50">Sebelumnya</span>
+            @else
+                <a href="{{ $materi->previousPageUrl() }}" class="px-4 py-2 rounded-xl text-stone-600 font-semibold bg-white border border-stone-200 hover:bg-stone-50">Sebelumnya</a>
+            @endif
+
+            <span class="text-sm text-stone-500 font-semibold px-1">Hal {{ $materi->currentPage() }}/{{ $materi->lastPage() }}</span>
+
+            @if ($materi->hasMorePages())
+                <a href="{{ $materi->nextPageUrl() }}" class="px-4 py-2 rounded-xl text-white font-semibold bg-emerald-500 hover:bg-emerald-600">Berikutnya</a>
+            @else
+                <span class="px-4 py-2 rounded-xl text-stone-300 font-semibold bg-stone-50">Berikutnya</span>
+            @endif
+        </div>
+    </div>
+@endif
 
 {{-- Modal --}}
 <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center px-4 z-50 overflow-y-auto py-8">

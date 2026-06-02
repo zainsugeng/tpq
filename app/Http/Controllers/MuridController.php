@@ -8,9 +8,21 @@ use Illuminate\Validation\Rule;
 
 class MuridController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $murid = User::where('role', 'murid')->latest()->get();
+        $cari = $request->input('cari');
+
+        $murid = User::where('role', 'murid')
+            ->when($cari, function ($q) use ($cari) {
+                $q->where(function ($sub) use ($cari) {
+                    $sub->where('nama', 'like', "%{$cari}%")
+                        ->orWhere('username', 'like', "%{$cari}%");
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.murid.index', compact('murid'));
     }
 

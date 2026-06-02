@@ -9,10 +9,25 @@ use Illuminate\Support\Facades\Storage;
 
 class MateriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $materi = Materi::with('modul')->orderBy('modul_id')->orderBy('urutan')->get();
-        $modul = Modul::orderBy('nama')->get();   // dropdown
+        $cari    = $request->input('cari');
+        $modulId = $request->input('modul');
+
+        $materi = Materi::with('modul')
+            ->when($cari, function ($q) use ($cari) {
+                $q->where(function ($sub) use ($cari) {
+                    $sub->where('label', 'like', "%{$cari}%")
+                        ->orWhere('teks_arab', 'like', "%{$cari}%");
+                });
+            })
+            ->when($modulId, fn($q) => $q->where('modul_id', $modulId))
+            ->orderBy('modul_id')
+            ->orderBy('urutan')
+            ->paginate(10)
+            ->withQueryString();
+
+        $modul = Modul::orderBy('nama')->get();   // dropdown (modal + filter)
         return view('admin.materi.index', compact('materi', 'modul'));
     }
 

@@ -25,10 +25,11 @@
         <a href="{{ route('home') }}" class="w-10 h-10 rounded-full bg-white shadow-sm border border-amber-100 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-stone-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
         </a>
-        <h1 class="font-fredoka text-2xl font-bold flex-1 leading-tight">{{ $pelajaran->nama }}</h1>
-        <div class="flex items-center gap-1.5 bg-white rounded-full pl-2 pr-3.5 py-1.5 shadow-sm border border-amber-100">
-            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="#FB923C"><path d="M13.5 .67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 .67z"/></svg>
+        <h1 class="font-fredoka text-2xl font-bold flex-1 min-w-0 leading-tight">{{ $pelajaran->nama }}</h1>
+        <div class="flex items-center gap-1.5 bg-white rounded-full pl-2.5 pr-4 py-2 shadow-sm border border-amber-100 shrink-0">
+            <svg viewBox="0 0 24 24" class="w-5 h-5 shrink-0" fill="#FB923C"><path d="M13.5 .67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 .67z"/></svg>
             <span class="font-fredoka font-bold text-orange-500 leading-none">{{ $user->jumlah_streak }}</span>
+            <span class="text-orange-500 text-sm font-semibold leading-none whitespace-nowrap">Hari Beruntun</span>
         </div>
     </header>
 
@@ -54,20 +55,24 @@
                     <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="font-fredoka font-bold text-stone-700">{{ $m->nama }}</p>
                         <p class="text-sm text-amber-700/60 font-semibold">{{ $sub }}</p>
                     </div>
+                    <span class="shrink-0 flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-100 px-3.5 py-2 rounded-full">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                        Ulangi
+                    </span>
                 </a>
 
             @elseif ($m->status === 'terbuka')
                 <a href="{{ route('belajar.index', $m->id) }}"
-                   class="anim press rounded-2xl p-4 bg-emerald-500 shadow-lg shadow-emerald-200/60 flex items-center gap-4"
+                    class="anim press rounded-2xl p-4 bg-emerald-500 shadow-lg shadow-emerald-200/60 flex items-center gap-4"
                    style="animation-delay:{{ 0.2 + $loop->index * 0.08 }}s">
                     <div class="w-12 h-12 rounded-full bg-white/25 flex items-center justify-center shrink-0">
                         <svg class="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="font-fredoka font-bold text-white">{{ $m->nama }}</p>
                         <p class="text-sm text-white/85 font-semibold">{{ $sub }}</p>
                     </div>
@@ -80,7 +85,7 @@
                     <div class="w-12 h-12 rounded-full bg-stone-200 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-stone-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="font-fredoka font-bold text-stone-400">{{ $m->nama }}</p>
                         <p class="text-sm text-stone-400 font-semibold">{{ $sub }}</p>
                     </div>

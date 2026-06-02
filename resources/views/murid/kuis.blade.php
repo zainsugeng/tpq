@@ -34,7 +34,7 @@
     </header>
 
     <main class="flex-1 flex flex-col justify-center">
-        <p class="font-fredoka text-center text-xl font-semibold mb-2">Dengarkan, lalu pilih hurufnya</p>
+        <p class="font-fredoka text-center text-xl font-semibold mb-2">Dengarkan, lalu pilih jawabannya</p>
         <p id="hint" class="text-center text-sm text-stone-400 mb-8"></p>
 
         {{-- tombol audio --}}

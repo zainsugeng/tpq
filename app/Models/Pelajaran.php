@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Pelajaran extends Model
 {
     protected $table = 'pelajaran';
-    protected $fillable = ['nama', 'urutan'];
+    protected $fillable = ['nama', 'subjudul', 'warna', 'urutan'];
 
     // 1 pelajaran punya banyak modul
     public function modul(): HasMany

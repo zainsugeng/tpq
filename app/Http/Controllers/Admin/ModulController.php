@@ -9,10 +9,20 @@ use Illuminate\Http\Request;
 
 class ModulController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $modul = Modul::with('pelajaran')->orderBy('pelajaran_id')->orderBy('urutan')->get();
-        $pelajaran = Pelajaran::orderBy('urutan')->get();   // buat dropdown
+        $cari        = $request->input('cari');
+        $pelajaranId = $request->input('pelajaran');
+
+        $modul = Modul::with('pelajaran')
+            ->when($cari, fn($q) => $q->where('nama', 'like', "%{$cari}%"))
+            ->when($pelajaranId, fn($q) => $q->where('pelajaran_id', $pelajaranId))
+            ->orderBy('pelajaran_id')
+            ->orderBy('urutan')
+            ->paginate(10)
+            ->withQueryString();
+
+        $pelajaran = Pelajaran::orderBy('urutan')->get();   // buat dropdown (modal + filter)
         return view('admin.modul.index', compact('modul', 'pelajaran'));
     }
 

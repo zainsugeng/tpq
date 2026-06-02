@@ -24,7 +24,7 @@
             <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
                 <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2-2h6v17H5a2 2 0 0 1-2-2V5zm10-2h6a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-6V3z"/></svg>
             </div>
-            <span class="font-fredoka font-bold text-lg leading-none">TPQ Ceria</span>
+            <span class="font-fredoka font-bold text-lg leading-none">TPQ Nurul Iman</span>
         </div>
 
         @php

@@ -7,7 +7,7 @@
 <div class="flex items-center justify-between mb-6">
     <div>
         <h1 class="font-fredoka text-2xl font-bold">Materi</h1>
-        <p class="text-sm text-stone-500 font-semibold">Kelola huruf/kosakata tiap modul</p>
+        <p class="text-sm text-stone-500 font-semibold">Kelola materi tiap modul</p>
     </div>
     <button onclick="bukaModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-semibold rounded-xl px-5 py-2.5 shadow flex items-center gap-2 shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>

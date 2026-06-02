@@ -11,8 +11,8 @@
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-emerald-500 shadow-lg mb-4">
                 <span class="font-arabic text-4xl text-white">إقرأ</span>
             </div>
-            <h1 class="font-fredoka text-3xl font-bold text-emerald-700">TPQ Ceria</h1>
-            <p class="text-slate-500 mt-1">Yuk belajar mengaji!</p>
+            <h1 class="font-fredoka text-3xl font-bold text-emerald-700">TPQ Nurul Iman</h1>
+            <p class="text-slate-500 mt-1">Yuk belajar!</p>
         </div>
 
         {{-- Kartu form --}}

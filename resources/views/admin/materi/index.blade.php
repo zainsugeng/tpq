@@ -123,9 +123,23 @@
 <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center px-4 z-50 overflow-y-auto py-8">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
         <h3 id="modalJudul" class="font-fredoka text-lg font-bold mb-4">Tambah Materi</h3>
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-xl bg-rose-50 text-rose-600 px-4 py-3 text-sm font-semibold">
+                <ul class="list-disc list-inside space-y-0.5">
+                    @foreach ($errors->all() as $e)
+                        <li>{{ $e }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form id="modalForm" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="_method" id="modalMethod" value="POST">
+            <input type="hidden" name="edit_id" id="fEditId">
+            <input type="hidden" name="audio_ada" id="fAudioAda">
+            <input type="hidden" name="gambar_ada" id="fGambarAda">
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold text-stone-600 mb-1">Modul</label>
@@ -153,7 +167,8 @@
             <div id="boxGambar" class="mb-4 hidden">
                 <label class="block text-sm font-semibold text-stone-600 mb-1">Gambar</label>
                 <input type="file" name="gambar" accept="image/*" class="w-full text-sm">
-                <p id="gambarInfo" class="text-xs text-stone-400 mt-1"></p>
+                <p class="text-xs text-stone-400 mt-1">Maks 2 MB · format JPG, PNG, atau WEBP.</p>
+                <p id="gambarInfo" class="text-xs text-emerald-600 mt-1"></p>
             </div>
 
             <div class="mb-4">
@@ -163,9 +178,10 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-semibold text-stone-600 mb-1">Audio (mp3/wav)</label>
+                <label class="block text-sm font-semibold text-stone-600 mb-1">Audio</label>
                 <input type="file" name="audio" accept="audio/*" class="w-full text-sm">
-                <p id="audioInfo" class="text-xs text-stone-400 mt-1"></p>
+                <p class="text-xs text-stone-400 mt-1">Maks 5 MB · format MP3, WAV, OGG, atau M4A.</p>
+                <p id="audioInfo" class="text-xs text-emerald-600 mt-1"></p>
             </div>
 
             <div class="mb-5">
@@ -195,27 +211,35 @@
         document.getElementById('boxGambar').classList.toggle('hidden', tipe !== 'gambar');
     }
 
-    function bukaModal(d = null) {
-        form.reset();
-        if (d) {
+    function bukaModal(d = {}) {
+        if (d.id) {
             document.getElementById('modalJudul').textContent = 'Edit Materi';
             document.getElementById('modalMethod').value = 'PUT';
             form.action = baseUrl + '/' + d.id;
-            document.getElementById('fModul').value = d.modul;
-            document.getElementById('fTipe').value = d.tipe;
-            document.getElementById('fTeks').value = d.teks;
-            document.getElementById('fLabel').value = d.label;
-            document.getElementById('fUrutan').value = d.urutan;
-            document.getElementById('audioInfo').textContent  = d.audio  ? 'Audio sudah ada. Kosongkan kalau tidak mau ganti.'  : '';
-            document.getElementById('gambarInfo').textContent = d.gambar ? 'Gambar sudah ada. Kosongkan kalau tidak mau ganti.' : '';
+            document.getElementById('fEditId').value = d.id;
         } else {
             document.getElementById('modalJudul').textContent = 'Tambah Materi';
             document.getElementById('modalMethod').value = 'POST';
             form.action = storeUrl;
-            document.getElementById('fUrutan').value = 0;
-            document.getElementById('audioInfo').textContent = '';
-            document.getElementById('gambarInfo').textContent = '';
+            document.getElementById('fEditId').value = '';
         }
+
+        if (d.modul) document.getElementById('fModul').value = d.modul;
+        document.getElementById('fTipe').value = d.tipe ?? 'teks';
+        document.getElementById('fTeks').value = d.teks ?? '';
+        document.getElementById('fLabel').value = d.label ?? '';
+        document.getElementById('fUrutan').value = d.urutan ?? 0;
+
+        // input file nggak bisa diisi balik, jadi dikosongin
+        form.querySelector('input[name=gambar]').value = '';
+        form.querySelector('input[name=audio]').value = '';
+
+        const adaAudio = !!d.audio, adaGambar = !!d.gambar;
+        document.getElementById('fAudioAda').value  = adaAudio ? '1' : '';
+        document.getElementById('fGambarAda').value = adaGambar ? '1' : '';
+        document.getElementById('audioInfo').textContent  = adaAudio  ? 'Audio sudah ada. Kosongkan kalau tidak mau ganti.'  : '';
+        document.getElementById('gambarInfo').textContent = adaGambar ? 'Gambar sudah ada. Kosongkan kalau tidak mau ganti.' : '';
+
         toggleTipe();
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -226,5 +250,19 @@
         modal.classList.remove('flex');
     }
     modal.addEventListener('click', (e) => { if (e.target === modal) tutupModal(); });
+
+    // Kalau validasi gagal (mis. file kegedean): buka lagi modalnya dengan isian yang tadi
+    @if ($errors->any())
+        bukaModal({
+            id:     @json(old('edit_id')),
+            modul:  @json(old('modul_id')),
+            tipe:   @json(old('tipe_konten', 'teks')),
+            teks:   @json(old('teks_arab', '')),
+            label:  @json(old('label', '')),
+            urutan: @json(old('urutan', 0)),
+            audio:  @json(old('audio_ada')),
+            gambar: @json(old('gambar_ada'))
+        });
+    @endif
 </script>
 @endpush

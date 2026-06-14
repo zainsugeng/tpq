@@ -123,9 +123,15 @@
 <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center px-4 z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
         <h3 id="modalJudul" class="font-fredoka text-lg font-bold mb-4">Tambah Pelajaran</h3>
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-xl bg-rose-50 text-rose-600 px-4 py-3 text-sm font-semibold">{{ $errors->first() }}</div>
+        @endif
+
         <form id="modalForm" method="POST">
             @csrf
             <input type="hidden" name="_method" id="modalMethod" value="POST">
+            <input type="hidden" name="edit_id" id="fEditId">
             <div class="mb-4">
                 <label class="block text-sm font-semibold text-stone-600 mb-1">Nama Pelajaran</label>
                 <input type="text" name="nama" id="fNama" required
@@ -171,19 +177,18 @@
             document.getElementById('modalJudul').textContent = 'Edit Pelajaran';
             document.getElementById('modalMethod').value = 'PUT';
             form.action = baseUrl + '/' + id;
-            document.getElementById('fNama').value = nama;
-            document.getElementById('fUrutan').value = urutan;
-            document.getElementById('fSubjudul').value = subjudul;
-            document.getElementById('fWarna').value = warna || 'emerald';
+            document.getElementById('fEditId').value = id;
         } else {
             document.getElementById('modalJudul').textContent = 'Tambah Pelajaran';
             document.getElementById('modalMethod').value = 'POST';
             form.action = storeUrl;
-            document.getElementById('fNama').value = '';
-            document.getElementById('fUrutan').value = 0;
-            document.getElementById('fSubjudul').value = '';
-            document.getElementById('fWarna').value = 'emerald';
+            document.getElementById('fEditId').value = '';
         }
+        document.getElementById('fNama').value = nama;
+        document.getElementById('fUrutan').value = urutan;
+        document.getElementById('fSubjudul').value = subjudul;
+        document.getElementById('fWarna').value = warna || 'emerald';
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
@@ -195,5 +200,16 @@
         modal.classList.remove('flex');
     }
     modal.addEventListener('click', (e) => { if (e.target === modal) tutupModal(); });
+
+    // Kalau validasi gagal: buka lagi modalnya dengan isian yang tadi
+    @if ($errors->any())
+        bukaModal(
+            @json(old('edit_id')) || null,
+            @json(old('nama', '')),
+            @json(old('urutan', 0)),
+            @json(old('subjudul', '')),
+            @json(old('warna', 'emerald'))
+        );
+    @endif
 </script>
 @endpush

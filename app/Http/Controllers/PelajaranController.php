@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PelajaranController extends Controller
 {
@@ -30,10 +31,12 @@ class PelajaranController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama'     => ['required', 'string', 'max:255'],
+            'nama'     => ['required', 'string', 'max:255', Rule::unique('pelajaran', 'nama')],
             'subjudul' => ['nullable', 'string', 'max:255'],
             'warna'    => ['nullable', 'in:emerald,rose,amber,sky,violet,teal'],
             'urutan'   => ['nullable', 'integer'],
+        ], [
+            'nama.unique' => 'Nama pelajaran ini sudah ada.',
         ]);
         $data['urutan'] = $data['urutan'] ?? 0;
         $data['warna']  = $data['warna'] ?? 'emerald';
@@ -45,10 +48,12 @@ class PelajaranController extends Controller
     public function update(Request $request, Pelajaran $pelajaran)
     {
         $data = $request->validate([
-            'nama'     => ['required', 'string', 'max:255'],
+            'nama'     => ['required', 'string', 'max:255', Rule::unique('pelajaran', 'nama')->ignore($pelajaran->id)],
             'subjudul' => ['nullable', 'string', 'max:255'],
             'warna'    => ['nullable', 'in:emerald,rose,amber,sky,violet,teal'],
             'urutan'   => ['nullable', 'integer'],
+        ], [
+            'nama.unique' => 'Nama pelajaran ini sudah ada.',
         ]);
         $data['urutan'] = $data['urutan'] ?? 0;
         $data['warna']  = $data['warna'] ?? 'emerald';

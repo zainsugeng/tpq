@@ -14,8 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect()->route('login'));
 
-Route::get('/login', fn() => view('auth.login'))->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+// === LOGIN MURID ===
+Route::get('/login', [AuthController::class, 'formMurid'])->name('login');
+Route::post('/login', [AuthController::class, 'loginMurid'])->name('login.proses');
+
+// === LOGIN ADMIN (halaman & URL terpisah) ===
+Route::get('/admin/login', [AuthController::class, 'formAdmin'])->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.proses');
+
+// === LOGOUT (dipakai dua-duanya) ===
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {

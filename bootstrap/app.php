@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         ]);
+
+        // Tamu (belum login) yang buka halaman /admin/* diarahkan ke login admin
+        $middleware->redirectGuestsTo(function (Request $request) {
+            return $request->is('admin/*') ? route('admin.login') : route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

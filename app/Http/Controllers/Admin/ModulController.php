@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Modul;
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ModulController extends Controller
 {
@@ -30,8 +31,10 @@ class ModulController extends Controller
     {
         $data = $request->validate([
             'pelajaran_id' => ['required', 'exists:pelajaran,id'],
-            'nama'         => ['required', 'string', 'max:255'],
+            'nama'         => ['required', 'string', 'max:255', Rule::unique('modul', 'nama')->where(fn($q) => $q->where('pelajaran_id', $request->pelajaran_id))],
             'urutan'       => ['nullable', 'integer'],
+        ], [
+            'nama.unique' => 'Nama modul ini sudah dipakai di pelajaran tersebut.',
         ]);
         $data['urutan'] = $data['urutan'] ?? 0;
         $data['aktif']  = $request->boolean('aktif');
@@ -44,8 +47,10 @@ class ModulController extends Controller
     {
         $data = $request->validate([
             'pelajaran_id' => ['required', 'exists:pelajaran,id'],
-            'nama'         => ['required', 'string', 'max:255'],
+            'nama'         => ['required', 'string', 'max:255', Rule::unique('modul', 'nama')->where(fn($q) => $q->where('pelajaran_id', $request->pelajaran_id))->ignore($modul->id)],
             'urutan'       => ['nullable', 'integer'],
+        ], [
+            'nama.unique' => 'Nama modul ini sudah dipakai di pelajaran tersebut.',
         ]);
         $data['urutan'] = $data['urutan'] ?? 0;
         $data['aktif']  = $request->boolean('aktif');

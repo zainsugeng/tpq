@@ -1,22 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Masuk - TPQ Ceria')
+@section('title', 'Login Admin - TPQ Nurul Iman')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-sm">
 
-        {{-- Logo & judul --}}
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-emerald-500 shadow-lg mb-4">
-                <span class="font-arabic text-4xl text-white">إقرأ</span>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-800 shadow-lg mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
             </div>
-            <h1 class="font-fredoka text-3xl font-bold text-emerald-700">TPQ Nurul Iman</h1>
-            <p class="text-slate-500 mt-1">Yuk belajar!</p>
+            <h1 class="font-fredoka text-2xl font-bold text-slate-800">Panel Admin</h1>
+            <p class="text-slate-500 mt-1 text-sm">TPQ Nurul Iman · Pengelola</p>
         </div>
 
-        {{-- Kartu form --}}
-        <div class="bg-white rounded-3xl shadow-xl p-8">
+        <div class="bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
 
             @if ($errors->any())
                 <div class="mb-4 rounded-2xl bg-rose-50 text-rose-600 text-sm px-4 py-3">
@@ -24,13 +22,13 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login.proses') }}">
+            <form method="POST" action="{{ route('admin.login.proses') }}">
                 @csrf
 
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Username</label>
                     <input type="text" name="username" value="{{ old('username') }}" required autofocus
-                        placeholder="Masukkan username"
+                        placeholder="Username admin"
                         class="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none">
                 </div>
 
@@ -38,7 +36,7 @@
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Password</label>
                     <div class="relative">
                         <input type="password" name="password" id="password" required
-                            placeholder="Masukkan password"
+                            placeholder="Password"
                             class="w-full rounded-2xl border border-slate-200 px-4 py-3 pr-12 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none">
                         <button type="button" onclick="togglePassword()" aria-label="Lihat/sembunyikan password"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -49,7 +47,7 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-semibold text-lg py-3 shadow-lg transition">
+                    class="w-full rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-fredoka font-semibold text-lg py-3 shadow-lg transition">
                     Masuk
                 </button>
             </form>

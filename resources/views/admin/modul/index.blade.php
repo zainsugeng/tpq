@@ -113,9 +113,15 @@
 <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center px-4 z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
         <h3 id="modalJudul" class="font-fredoka text-lg font-bold mb-4">Tambah Modul</h3>
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-xl bg-rose-50 text-rose-600 px-4 py-3 text-sm font-semibold">{{ $errors->first() }}</div>
+        @endif
+
         <form id="modalForm" method="POST">
             @csrf
             <input type="hidden" name="_method" id="modalMethod" value="POST">
+            <input type="hidden" name="edit_id" id="fEditId">
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold text-stone-600 mb-1">Pelajaran</label>
@@ -157,23 +163,23 @@
     const storeUrl = "{{ route('admin.modul.store') }}";
     const baseUrl = "{{ url('admin/modul') }}";
 
-    function bukaModal(data = null) {
-        if (data) {
+    function bukaModal(data = {}) {
+        if (data.id) {
             document.getElementById('modalJudul').textContent = 'Edit Modul';
             document.getElementById('modalMethod').value = 'PUT';
             form.action = baseUrl + '/' + data.id;
-            document.getElementById('fPelajaran').value = data.pelajaran;
-            document.getElementById('fNama').value = data.nama;
-            document.getElementById('fUrutan').value = data.urutan;
-            document.getElementById('fAktif').checked = (data.aktif === '1');
+            document.getElementById('fEditId').value = data.id;
         } else {
             document.getElementById('modalJudul').textContent = 'Tambah Modul';
             document.getElementById('modalMethod').value = 'POST';
             form.action = storeUrl;
-            document.getElementById('fNama').value = '';
-            document.getElementById('fUrutan').value = 0;
-            document.getElementById('fAktif').checked = false;
+            document.getElementById('fEditId').value = '';
         }
+        if (data.pelajaran) document.getElementById('fPelajaran').value = data.pelajaran;
+        document.getElementById('fNama').value = data.nama ?? '';
+        document.getElementById('fUrutan').value = data.urutan ?? 0;
+        document.getElementById('fAktif').checked = (data.aktif === '1' || data.aktif === 1 || data.aktif === true);
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
@@ -183,5 +189,16 @@
         modal.classList.remove('flex');
     }
     modal.addEventListener('click', (e) => { if (e.target === modal) tutupModal(); });
+
+    // Kalau validasi gagal: buka lagi modalnya dengan isian yang tadi
+    @if ($errors->any())
+        bukaModal({
+            id:        @json(old('edit_id')),
+            pelajaran: @json(old('pelajaran_id')),
+            nama:      @json(old('nama', '')),
+            urutan:    @json(old('urutan', 0)),
+            aktif:     @json(old('aktif') ? '1' : '0')
+        });
+    @endif
 </script>
 @endpush

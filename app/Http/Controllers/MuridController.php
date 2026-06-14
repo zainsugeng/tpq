@@ -16,7 +16,8 @@ class MuridController extends Controller
             ->when($cari, function ($q) use ($cari) {
                 $q->where(function ($sub) use ($cari) {
                     $sub->where('nama', 'like', "%{$cari}%")
-                        ->orWhere('username', 'like', "%{$cari}%");
+                        ->orWhere('username', 'like', "%{$cari}%")
+                        ->orWhere('nama_ortu', 'like', "%{$cari}%");
                 });
             })
             ->latest()
@@ -29,10 +30,13 @@ class MuridController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama'     => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'password' => ['required', 'string', 'min:4'],
-        ]);
+            'nama'          => ['required', 'string', 'max:255'],
+            'nama_ortu'     => ['required', 'string', 'max:255'],
+            'jenis_kelamin' => ['required', 'in:L,P'],
+            'tanggal_lahir' => ['required', 'date'],
+            'username'      => ['required', 'string', 'max:255', 'unique:users,username'],
+            'password'      => ['required', 'string', 'min:4'],
+        ], $this->pesan());
         $data['role'] = 'murid';
 
         User::create($data);
@@ -42,10 +46,13 @@ class MuridController extends Controller
     public function update(Request $request, User $murid)
     {
         $data = $request->validate([
-            'nama'     => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($murid->id)],
-            'password' => ['nullable', 'string', 'min:4'],
-        ]);
+            'nama'          => ['required', 'string', 'max:255'],
+            'nama_ortu'     => ['required', 'string', 'max:255'],
+            'jenis_kelamin' => ['required', 'in:L,P'],
+            'tanggal_lahir' => ['required', 'date'],
+            'username'      => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($murid->id)],
+            'password'      => ['nullable', 'string', 'min:4'],
+        ], $this->pesan());
 
         if (empty($data['password'])) {
             unset($data['password']);   // password cuma diganti kalau diisi
@@ -59,5 +66,16 @@ class MuridController extends Controller
     {
         $murid->delete();
         return back()->with('sukses', 'Akun murid berhasil dihapus.');
+    }
+
+    private function pesan(): array
+    {
+        return [
+            'required'           => 'Bagian ini wajib diisi.',
+            'username.unique'    => 'Username ini sudah dipakai.',
+            'jenis_kelamin.in'   => 'Jenis kelamin tidak valid.',
+            'tanggal_lahir.date' => 'Tanggal lahir tidak valid.',
+            'password.min'       => 'Password minimal 4 karakter.',
+        ];
     }
 }

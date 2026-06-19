@@ -47,13 +47,23 @@
                         </button>
                     </div>
                 </div>
-
+                {{-- Lupa password --}}
+                <div class="text-right -mt-3 mb-5">
+                    <a href="{{ route('lupa-password') }}" class="text-sm font-semibold text-emerald-600 hover:underline">Lupa password?</a>
+                </div>
                 <button type="submit"
                     class="w-full rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-semibold text-lg py-3 shadow-lg transition">
                     Masuk
                 </button>
             </form>
         </div>
+
+        {{-- Link ke halaman login admin --}}
+        <p class="text-center text-sm text-slate-400 mt-6">
+            Pengelola TPQ?
+            <a href="{{ route('admin.login') }}"
+                class="font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">Masuk sebagai Admin</a>
+        </p>
 
     </div>
 </div>

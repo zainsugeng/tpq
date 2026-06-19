@@ -46,7 +46,6 @@
     <header class="anim d1 w-full max-w-md md:max-w-3xl mx-auto px-6 pt-8 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
         <div class="flex items-center gap-3 min-w-0">
             <div class="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-200/60 shrink-0">
-                {{-- ikon profil --}}
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/></svg>
             </div>
             <div class="min-w-0">
@@ -54,16 +53,20 @@
                 <p class="font-fredoka text-lg font-semibold leading-tight truncate">{{ $user->nama }}</p>
             </div>
         </div>
-        <div class="flex items-center gap-2">
-            {{-- streak: ikon + teks --}}
+        <div class="flex flex-wrap items-center justify-end gap-2">
+            {{-- streak --}}
             <div class="flex items-center gap-1.5 bg-white rounded-full pl-2.5 pr-4 py-2 shadow-sm border border-amber-100">
-                <svg viewBox="0 0 24 24" class="w-5 h-5 shrink-0" fill="#FB923C">
-                    <path d="M13.5 .67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 .67z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" class="w-5 h-5 shrink-0" fill="#FB923C"><path d="M13.5 .67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 .67z"/></svg>
                 <span class="font-fredoka font-bold text-orange-500 leading-none">{{ $user->jumlah_streak }}</span>
                 <span class="text-orange-500 text-sm font-semibold leading-none whitespace-nowrap">Hari Beruntun</span>
             </div>
-            {{-- keluar: ikon + teks --}}
+            {{-- ubah password --}}
+            <a href="{{ route('password.edit') }}" title="Ubah Password"
+                class="press flex items-center gap-2 bg-white rounded-full pl-3.5 pr-4 py-2 shadow-sm border border-amber-100 text-stone-500 hover:text-emerald-600">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.03 5.91c-.56-.1-1.16.03-1.56.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.82c0-.6.24-1.17.66-1.59l6.5-6.5c.4-.4.53-1 .43-1.56A6 6 0 1 1 21.75 8.25Z"/></svg>
+                <span class="text-sm font-bold">Password</span>
+            </a>
+            {{-- keluar --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" title="Keluar" class="press flex items-center gap-2 bg-white rounded-full pl-3.5 pr-4 py-2 shadow-sm border border-amber-100 text-stone-500 hover:text-rose-500">
@@ -73,7 +76,6 @@
             </form>
         </div>
     </header>
-
     {{-- Konten utama (di tengah secara vertikal) --}}
     <main class="flex-1 flex flex-col justify-center w-full max-w-md md:max-w-3xl mx-auto px-6 py-10">
         <h1 class="anim d2 font-fredoka text-3xl font-semibold mb-1">Mau belajar apa hari ini?</h1>

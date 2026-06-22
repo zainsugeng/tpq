@@ -15,6 +15,7 @@ class MateriController extends Controller
         $modulId = $request->input('modul');
 
         $materi = Materi::with('modul')
+            ->whereHas('modul.pelajaran', fn($q) => $q->where('guru_id', auth()->id()))  // materi dari modul→pelajaran si admin
             ->when($cari, function ($q) use ($cari) {
                 $q->where(function ($sub) use ($cari) {
                     $sub->where('label', 'like', "%{$cari}%")
@@ -27,7 +28,8 @@ class MateriController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $modul = Modul::orderBy('nama')->get();   // dropdown (modal + filter)
+        $modul = Modul::whereHas('pelajaran', fn($q) => $q->where('guru_id', auth()->id()))  // dropdown: modul si admin
+            ->orderBy('nama')->get();
         return view('admin.materi.index', compact('materi', 'modul'));
     }
 
@@ -45,9 +47,10 @@ class MateriController extends Controller
 
     public function update(Request $request, Materi $materi)
     {
+        abort_unless($materi->modul->pelajaran->guru_id == auth()->id(), 403);   // cegah edit materi admin lain
+
         $data = $this->validasi($request);
 
-        // file lama cuma diganti kalau ada upload baru
         if ($request->hasFile('audio')) {
             if ($materi->audio) Storage::disk('public')->delete($materi->audio);
             $data['audio'] = $request->file('audio')->store('audio', 'public');
@@ -64,6 +67,8 @@ class MateriController extends Controller
 
     public function destroy(Materi $materi)
     {
+        abort_unless($materi->modul->pelajaran->guru_id == auth()->id(), 403);   // cegah hapus materi admin lain
+
         if ($materi->audio)  Storage::disk('public')->delete($materi->audio);
         if ($materi->gambar) Storage::disk('public')->delete($materi->gambar);
         $materi->delete();
@@ -73,16 +78,20 @@ class MateriController extends Controller
     private function validasi(Request $request): array
     {
         $request->validate([
-            'modul_id'    => ['required', 'exists:modul,id'],
+            'modul_id'    => ['required', 'exists:modul,id', function ($attribute, $value, $fail) {
+                $modul = Modul::with('pelajaran')->find($value);
+                if (! $modul || $modul->pelajaran->guru_id != auth()->id()) {
+                    $fail('Modul tidak valid atau bukan milik Anda.');
+                }
+            }],
             'tipe_konten' => ['required', 'in:teks,gambar'],
             'label'       => ['required', 'string', 'max:255'],
             'teks_arab'   => ['nullable', 'string', 'max:255'],
-            'gambar'      => ['nullable', 'image', 'max:2048'],          // maks 2MB
-            'audio'       => ['nullable', 'mimes:mp3,wav,ogg,m4a', 'max:5120'], // maks 5MB
+            'gambar'      => ['nullable', 'image', 'max:2048'],
+            'audio'       => ['nullable', 'mimes:mp3,wav,ogg,m4a', 'max:5120'],
             'urutan'      => ['nullable', 'integer'],
         ]);
 
-        // balikin field NON-file aja (biar file lama nggak ke-null saat edit)
         return $request->only(['modul_id', 'tipe_konten', 'label', 'teks_arab', 'urutan']);
     }
 }

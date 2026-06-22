@@ -11,6 +11,8 @@ class ModulController extends Controller
     {
         $user = auth()->user();
 
+        abort_unless($pelajaran->guru_id == $user->guru_id, 403);   // cegah murid buka pelajaran guru lain
+
         // ID modul yang SUDAH diselesaikan murid ini
         $selesaiIds = Progres::where('murid_id', $user->id)
             ->pluck('modul_id')

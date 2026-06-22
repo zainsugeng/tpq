@@ -52,7 +52,10 @@
                 </button>
             </form>
         </div>
-
+            {{-- Lupa password --}}
+            <p class="text-center mt-6">
+                <a href="{{ route('admin.lupa-password') }}" class="text-sm font-semibold text-slate-500 hover:text-slate-700 hover:underline">Lupa password?</a>
+            </p>
     </div>
 </div>
 @endsection

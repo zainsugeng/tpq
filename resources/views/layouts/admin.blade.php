@@ -48,10 +48,12 @@
             <a href="{{ route('admin.murid.index') }}" class="{{ request()->routeIs('admin.murid.*') ? $aktif : $biasa }}">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-6 1.8-6 4v2h9v-2c0-1 .4-1.9 1-2.7C9.9 14.4 9 14 8 14zm8 0c-.4 0-.8 0-1.1.1 1.3 1 2.1 2.3 2.1 3.9v2h7v-2c0-2.2-2.7-4-6-4z"/></svg> Akun Murid
             </a>
-            {{-- Ubah Password --}}
-        <a href="{{ route('password.edit') }}" class="{{ request()->routeIs('password.edit') ? $aktif : $biasa }} mb-1">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.03 5.91c-.56-.1-1.16.03-1.56.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.82c0-.6.24-1.17.66-1.59l6.5-6.5c.4-.4.53-1 .43-1.56A6 6 0 1 1 21.75 8.25Z"/></svg> Ubah Password
-        </a>
+            <a href="{{ route('password.edit') }}" class="{{ request()->routeIs('password.edit') ? $aktif : $biasa }} mb-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.03 5.91c-.56-.1-1.16.03-1.56.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.82c0-.6.24-1.17.66-1.59l6.5-6.5c.4-.4.53-1 .43-1.56A6 6 0 1 1 21.75 8.25Z"/></svg> Ubah Password
+            </a>
+            <a href="{{ route('admin.akun-admin.index') }}" class="{{ request()->routeIs('admin.akun-admin.*') ? $aktif : $biasa }}">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z"/></svg> Akun Admin
+            </a>
         </nav>
 
         {{-- Logout --}}

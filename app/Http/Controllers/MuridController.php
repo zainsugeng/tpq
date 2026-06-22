@@ -13,6 +13,7 @@ class MuridController extends Controller
         $cari = $request->input('cari');
 
         $murid = User::where('role', 'murid')
+            ->where('guru_id', auth()->id())          // cuma murid milik admin yang login
             ->when($cari, function ($q) use ($cari) {
                 $q->where(function ($sub) use ($cari) {
                     $sub->where('nama', 'like', "%{$cari}%")
@@ -37,7 +38,8 @@ class MuridController extends Controller
             'username'      => ['required', 'string', 'max:255', 'unique:users,username'],
             'password'      => ['required', 'string', 'min:4'],
         ], $this->pesan());
-        $data['role'] = 'murid';
+        $data['role']    = 'murid';
+        $data['guru_id'] = auth()->id();              // murid ini dipegang admin yang login
 
         User::create($data);
         return back()->with('sukses', 'Akun murid berhasil dibuat.');
@@ -45,6 +47,8 @@ class MuridController extends Controller
 
     public function update(Request $request, User $murid)
     {
+        abort_unless($murid->guru_id == auth()->id(), 403);   // cegah edit murid admin lain
+
         $data = $request->validate([
             'nama'          => ['required', 'string', 'max:255'],
             'nama_ortu'     => ['required', 'string', 'max:255'],
@@ -64,6 +68,8 @@ class MuridController extends Controller
 
     public function destroy(User $murid)
     {
+        abort_unless($murid->guru_id == auth()->id(), 403);   // cegah hapus murid admin lain
+
         $murid->delete();
         return back()->with('sukses', 'Akun murid berhasil dihapus.');
     }

@@ -10,6 +10,8 @@ class QuizController extends Controller
     // Tampilkan kuis (soal di-generate otomatis)
     public function index(Modul $modul)
     {
+        abort_unless($modul->pelajaran->guru_id == auth()->user()->guru_id, 403);   // cegah kuis dari materi guru lain
+
         $semua = $modul->materi()->get();
 
         $jumlahSoal = min(5, $semua->count());
@@ -43,6 +45,8 @@ class QuizController extends Controller
     public function selesai(Modul $modul)
     {
         $user = auth()->user();
+
+        abort_unless($modul->pelajaran->guru_id == $user->guru_id, 403);   // cegah nyelesaiin modul guru lain
 
         // 1) Catat progres (cuma sekali per modul)
         $progres = Progres::firstOrCreate(
@@ -85,6 +89,8 @@ class QuizController extends Controller
     // Halaman hasil
     public function hasil(Modul $modul)
     {
+        abort_unless($modul->pelajaran->guru_id == auth()->user()->guru_id, 403);   // cegah liat hasil modul guru lain
+
         return view('murid.hasil', compact('modul'));
     }
 }

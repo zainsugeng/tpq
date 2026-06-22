@@ -12,6 +12,7 @@ use App\Http\Controllers\MuridController;
 use App\Http\Controllers\Admin\ModulController as ModulAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\AkunAdminController;
 
 Route::get('/', fn() => redirect()->route('login'));
 
@@ -24,6 +25,7 @@ Route::get('/admin/login', [AuthController::class, 'formAdmin'])->name('admin.lo
 Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.proses');
 
 Route::view('/lupa-password', 'auth.lupa-password')->name('lupa-password');
+Route::view('/admin/lupa-password', 'auth.lupa-password-admin')->name('admin.lupa-password');
 // === LOGOUT (dipakai dua-duanya) ===
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -50,5 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('modul', ModulAdminController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('materi', MateriController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('murid', MuridController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('akun-admin', AkunAdminController::class)
+            ->only(['index', 'store', 'update', 'destroy'])
+            ->parameters(['akun-admin' => 'admin']);
     });
 });
